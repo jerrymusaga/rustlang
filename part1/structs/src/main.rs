@@ -1,15 +1,15 @@
-struct Guess {
-    secret_number: u32
+struct Guess<T> {
+    secret_number: T
 }
 
-impl Guess {
-    fn new(secret_number: u32) -> Self {
+impl<T:Ord> Guess<T> {
+    fn new(secret_number: T) -> Guess<T> {
         Self {
             secret_number
         }
     }
 
-    fn check_guess(&self, guess: u32) {
+    fn check_guess(&self, guess: T) {
         if guess == self.secret_number{
             println!("correct")
         }
