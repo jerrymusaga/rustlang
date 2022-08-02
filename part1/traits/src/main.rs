@@ -1,8 +1,9 @@
 // use traits::{Summary, Tweet};
 
 pub trait Summary{
+    fn summarize_author(&self) -> String;
     fn summarize(&self) -> String {
-        String::from("Read more")
+        format!("(Read more...{} )", self.summarize_author())
     } 
 }
 
@@ -13,14 +14,17 @@ pub struct NewsArticle{
     pub author: String
 }
 
-// impl Summary for NewsArticle{
-//     fn summarize(&self) -> String {
-//         format!("{}, by {} ({})", self.headline, self.author, self.location)
-//     }
-// }
+impl Summary for NewsArticle{
+    fn summarize_author(&self) -> String {
+        format!("@{}", self.author)
+    }
+    fn summarize(&self) -> String {
+        format!("{}, by {} ({})", self.headline, self.summarize_author(), self.location)
+    }
+}
 
 // default impl 
-impl Summary for NewsArticle{}
+// impl Summary for NewsArticle{}
 
 pub struct Tweet{
     pub username: String,
@@ -33,7 +37,26 @@ impl Summary for Tweet {
     fn summarize(&self) -> String{
         format!("{}: {}", self.username, self.reply)
     }
+    fn summarize_author(&self) -> String {
+        format!("@{}", self.username)
+    }
     
+}
+
+pub fn notify(item: &impl Summary) {
+    println!("Breaking news: {}", item.summarize());
+}
+
+struct Animal {
+    name: String,
+    age: u32
+}
+
+//impl inbuilt trait
+impl ToString for Animal {
+    fn to_string(&self) -> String {
+        format!("{} is {} years old",self.name,self.age)
+    }
 }
 
 fn main() {
@@ -51,5 +74,13 @@ fn main() {
         content: String::from("this is a letter from war"),
         author: String::from("Mike")
     };
-    println!("New article available: {}", article.summarize())
+    println!("New article available: {}", article.summarize());
+
+    let animal = Animal {
+        name: String::from("Cow"),
+        age: 45
+    };
+    println!("New Animal: {}",animal.to_string());
+
+    notify(&tweet);
 }
