@@ -43,8 +43,8 @@ impl Summary for Tweet {
     
 }
 
-pub fn notify(item: &impl Summary) {
-    println!("Breaking news: {}", item.summarize());
+pub fn notify<T: Summary, U: Summary>(item1: &T, item2: &U) {
+    println!("Breaking news: {}\n {}", item1.summarize(), item2.summarize());
 }
 
 struct Animal {
@@ -82,5 +82,5 @@ fn main() {
     };
     println!("New Animal: {}",animal.to_string());
 
-    notify(&tweet);
+    notify(&tweet, &article);
 }
